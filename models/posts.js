@@ -21,6 +21,6 @@ PostsSchema.virtual("url").get(function () {
     return `/posts/${this.id}`
 })
 
-const PostsModel = mongoose.model("Posts", PostsSchema)
+const PostsModel = mongoose.model("Post", PostsSchema)
 
 export default PostsModel

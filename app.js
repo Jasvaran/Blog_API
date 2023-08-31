@@ -10,9 +10,9 @@ import router from './routes';
 import mongoose from 'mongoose';
 
 
-
 const app = express();
 
+mongoose.set("strictQuery", false)
 async function main(){
     await mongoose.connect(process.env.DB_URL)
     console.log('Database Connection Successfull')
@@ -30,7 +30,9 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(morgan('combined'))
 app.use(cookieParser())
+
 app.use('/', router.router)
+
 
 app.listen(process.env.DB_PORT, () => {
     console.log(`Server listening on port ${process.env.DB_PORT}`)
