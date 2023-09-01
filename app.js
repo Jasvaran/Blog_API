@@ -8,13 +8,18 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import router from './routes';
 import mongoose from 'mongoose';
+import session from 'express-session';
+import passport from 'passport';
+const LocalStrategy = require('passport-local').Strategy
+import UserModel from './models/user';
 
 
 const app = express();
 
+
 mongoose.set("strictQuery", false)
 async function main(){
-    await mongoose.connect(process.env.DB_URL)
+    await mongoose.connect(process.env.DB_URL, {useUnifiedTopology: true, useNewUrlParser: true})
     console.log('Database Connection Successfull')
 
 }
@@ -25,6 +30,47 @@ mongoose.connection.on('error', err => {
     console.log(err)
 })
 
+
+app.use(session({secret: 'cats', resave: false, saveUninitialized: true}))
+
+// this function will be called when we use passport.authenticate() later
+passport.use(
+    new LocalStrategy(async(username, password, done) => {
+       try {
+           const user = await UserModel.findOne({username: username});
+           if (!user) {
+               return done(null, false, { message: "incorrect username" })
+           };
+
+           if (user.password !== password) {
+               return done(null, false, { message: "Incorrect password"})
+           }
+           return done(null, user)
+           
+       } catch (err){
+           return done(err)
+       }
+   })
+)
+
+// passport will use some data to create a cookie to make sure our user is logged in and stays logged in
+passport.serializeUser(function(user, done){
+   done(null, user.id)
+})
+
+passport.deserializeUser(async function(id, done){
+   try {
+       const user = await UserModel.findById(id)
+       done(null, user)
+   } catch (err) {
+       done(err)
+   }
+})
+
+
+app.use(passport.initialize())
+app.use(passport.session())
+
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
@@ -32,6 +78,12 @@ app.use(morgan('combined'))
 app.use(cookieParser())
 
 app.use('/', router.router)
+
+// authentication basics
+
+
+
+
 
 
 app.listen(process.env.DB_PORT, () => {

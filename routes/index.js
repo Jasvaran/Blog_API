@@ -7,40 +7,21 @@ const router = express.Router()
 
 router.get('/', (req, res) => {
     return res.json({
-        message: "Hello"
+        message: "Hello",
+        user: req.user
     })
 })
 
 
 
-router.get('/user', async(req, res, next) => {
-    try {
-        const user = await UserModel.find({}).exec()
-        res.send(user)
-    } catch (err) {
-        res.status(500).send({
-            message: err.message
-        })
-    }
-})
+router.get('/user', userController.findUsers_GET)
 
 
-router.post('/user', async(req, res, next) => {
-    try {
-        const newUser = new UserModel({
-            username: req.body.username,
-            password: req.body.password
-        })
-        await newUser.save()
-            .then(data => {
-                res.send(data)
-            })
-    } catch(err) {
-        res.status(400).send({
-            mesage: err.mesage
-        })
-    }
-})
+router.post('/user', userController.createUser_GET)
+
+
+router.post('/user/login', userController.logIn_POST)
+
 
 
 router.get('/posts', async(req, res, next) => {
