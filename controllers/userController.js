@@ -1,9 +1,10 @@
 import UserModel from "../models/user";
 import asyncHandler from "express-async-handler";
+import  ExpressValidator  from "express-validator";
 import passport from "passport";
 
 
-const findUsers_GET = async(req, res) => {
+const findAllUsers_GET = async(req, res) => {
     try {
         const users = await UserModel.find({}).exec()
         res.send(users)
@@ -15,7 +16,7 @@ const findUsers_GET = async(req, res) => {
     }
 }
 
-const createUser_GET = async(req, res) => {
+const createUser_POST = async(req, res) => {
     try {
         const newUser = new UserModel({
             username: req.body.username,
@@ -41,8 +42,8 @@ const logIn_POST = async(req, res, next) => {
 
 
 export {
-    findUsers_GET,
-    createUser_GET,
+    findAllUsers_GET,
+    createUser_POST,
     logIn_POST
 
 }

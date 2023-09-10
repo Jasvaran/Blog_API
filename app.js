@@ -79,7 +79,6 @@ app.use(cookieParser())
 
 app.use('/', router.router)
 
-// authentication basics
 
 
 
