@@ -12,9 +12,12 @@ const UserSchema = new Schema({
     password: {
         type: String,
         minLength: 6,
-        maxLength: 30,
         required: true
     },
+    admin: {
+        type: Boolean,
+        default: false
+    }
 })
 
 UserSchema.virtual('url').get(function (){

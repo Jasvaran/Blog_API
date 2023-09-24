@@ -12,7 +12,7 @@ import session from 'express-session';
 import passport from 'passport';
 const LocalStrategy = require('passport-local').Strategy
 import UserModel from './models/user';
-
+import bcryptjs from 'bcryptjs'
 
 const app = express();
 
@@ -38,14 +38,19 @@ passport.use(
     new LocalStrategy(async(username, password, done) => {
        try {
            const user = await UserModel.findOne({username: username});
+           
            if (!user) {
                return done(null, false, { message: "incorrect username" })
            };
 
-           if (user.password !== password) {
-               return done(null, false, { message: "Incorrect password"})
-           }
-           return done(null, user)
+           bcryptjs.compare(password, user.password, function(err, res){
+            if (res){
+                console.log("log in works")
+                return done(null, user)
+            } else {
+                return done(null, false, {message: "Incorrect password"})
+            }
+           })
            
        } catch (err){
            return done(err)
@@ -71,11 +76,16 @@ passport.deserializeUser(async function(id, done){
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:5173',
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true
+}))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(morgan('combined'))
 app.use(cookieParser())
+
 
 app.use('/', router.router)
 

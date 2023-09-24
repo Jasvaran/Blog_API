@@ -7,14 +7,21 @@ import PostsModel from '../models/posts'
 import asyncHandler from 'express-async-handler'
 const router = express.Router()
 
-router.get('/', (req, res) => {
-    return res.json({
+router.get('/checkValidation', (req, res) => {
+    
+    return res.send({
         message: "Hello",
         user: req.user,
-        userId: req.user.id
+        id: req.sessionID
+    
     })
 })
 
+router.get('/test', (req, res) => {
+    return res.json({
+        message: "failed",
+    })
+})
 
 // USER ROUTES
 router.get('/user', userController.findAllUsers_GET)
