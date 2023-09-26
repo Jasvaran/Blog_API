@@ -76,6 +76,7 @@ const logIn_POST = async(req, res, next) => {
     passport.authenticate('local', {
         successRedirect: '/checkValidation',
         failureRedirect: '/test',
+        failureFlash: true,
     })(req, res, next)
 }
 
