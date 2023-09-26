@@ -20,6 +20,7 @@ router.get('/checkValidation', (req, res) => {
 router.get('/test', (req, res) => {
     return res.json({
         message: "failed",
+        error: req.flash('error')
     })
 })
 
@@ -31,6 +32,16 @@ router.post('/user', userController.createUser_POST)
 
 
 router.post('/user/login', userController.logIn_POST)
+
+router.post('/user/logout', (req, res, next) => {
+    req.logout((err) => {
+        if (err){
+            return next(err)
+        }
+        console.log('log out successful')
+        res.redirect('/')
+    })
+})
 
 
 
