@@ -13,6 +13,7 @@ import passport from 'passport';
 const LocalStrategy = require('passport-local').Strategy
 import UserModel from './models/user';
 import bcryptjs from 'bcryptjs'
+import flash from 'connect-flash'
 
 const app = express();
 
@@ -85,7 +86,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(morgan('combined'))
 app.use(cookieParser())
-
+app.use(flash()) // middleware for getting error during passport.authenticate()
 
 app.use('/', router.router)
 
