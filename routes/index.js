@@ -38,8 +38,7 @@ router.post('/user/logout', (req, res, next) => {
         if (err){
             return next(err)
         }
-        console.log('log out successful')
-        res.redirect('/')
+        res.redirect('/checkValidation')
     })
 })
 
