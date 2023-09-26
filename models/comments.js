@@ -12,10 +12,9 @@ const CommentSchema = new Schema({
     timestamp: {
         type: Date,
     },
-    name: {
-        type: String,
-        required: true,
-        minLength: 1
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
     }
 })
 
