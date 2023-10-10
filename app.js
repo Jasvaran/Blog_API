@@ -15,9 +15,10 @@ import UserModel from './models/user';
 import bcryptjs from 'bcryptjs'
 import flash from 'connect-flash'
 
+
 const app = express();
 
-
+// console.log(path.resolve(__dirname, '..'))
 mongoose.set("strictQuery", false)
 async function main(){
     await mongoose.connect(process.env.DB_URL, {useUnifiedTopology: true, useNewUrlParser: true})

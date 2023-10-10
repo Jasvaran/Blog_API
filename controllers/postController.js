@@ -1,5 +1,7 @@
 import PostsModel from "../models/posts";
 import UserModel from "../models/user";
+import fs from 'node:fs'
+import path from 'node:path'
 
 
 const findAllPosts_GET = async(req, res, next) => {
@@ -17,17 +19,28 @@ const findAllPosts_GET = async(req, res, next) => {
 
 const createPost_POST = async(req, res, next) => {
     try {
-
+        console.log('req.file ------->',req.file)
         const currentUser = await UserModel.findById(req.user.id)
+
+        const directoryVar = path.resolve(__dirname, '..')
+
+        if (!req.file){
+            throw new Error("Must upload image")
+        }
         
         const newPost = new PostsModel({
             title: req.body.title,
             text: req.body.text,
-            user: currentUser._id
+            user: currentUser._id,
+            blogpic: {
+                data: fs.readFileSync(path.join(directoryVar + '/uploads/' + req.file.filename)),
+                contentType: req.file.mimetype
+            }
+
         })
         await newPost.save()
         return res.send(newPost)
-        
+
     } catch (error) {
         res.status(500).send({
             message: error.message,

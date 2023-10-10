@@ -30,9 +30,13 @@ const findOneComment_GET = async(req, res) => {
 
 const createComment_POST = async(req, res) => {
     try {
+
+        const currentUser = await UserModel.findById(req.user.id)
+
         const newComment = new CommentModel({
             text: req.body.text,
-            timestamp: new Date(Date.now())
+            timestamp: new Date(Date.now()),
+            user: currentUser._id
         })
         await newComment.save()
         res.send(newComment)
@@ -46,9 +50,13 @@ const createComment_POST = async(req, res) => {
 
 const updateComment_PUT = async(req, res) => {
     try {
+
+        const currentUser = await UserModel.findById(req.user.id)
+
         const updatedComment = new CommentModel({
             text: req.body.text,
             timestamp: new Date(Date.now()),
+            user: currentUser._id,
             _id: req.params.id
         })
         const update = await CommentModel.findByIdAndUpdate(req.params.id, updatedComment, {returnDocument: "after"}).exec()

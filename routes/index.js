@@ -5,6 +5,21 @@ import * as commentController from '../controllers/commentController'
 import UserModel from '../models/user'
 import PostsModel from '../models/posts'
 import asyncHandler from 'express-async-handler'
+import multer from 'multer'
+
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+})
+
+const upload = multer({ storage: storage })
+
+
 const router = express.Router()
 
 router.get('/checkValidation', (req, res) => {
@@ -21,6 +36,13 @@ router.get('/test', (req, res) => {
     return res.json({
         message: "failed",
         error: req.flash('error')
+    })
+})
+
+router.get('/testing', (req, res) => {
+    return res.send({
+        user: req.user,
+        message: "message"
     })
 })
 
@@ -43,6 +65,10 @@ router.post('/user/logout', (req, res, next) => {
 })
 
 
+router.post('/uploading', upload.single("blogpic"), async(req, res) => {
+   console.log(req)
+})
+
 
 
 // POSTS ROUTES //
@@ -51,13 +77,13 @@ router.post('/user/logout', (req, res, next) => {
 router.get('/posts', postController.findAllPosts_GET)
 
 // POST request for creating a post
-router.post('/posts', postController.createPost_POST)
+router.post('/posts', upload.single("blogpic"), postController.createPost_POST)
     
 // GET request for finding ONE post
 router.get('/posts/:id', postController.findOnePost_GET)
 
 // PUT request for updating post
-router.put('/posts/:id/', postController.updatePost_PUT)
+router.put('/posts/:id/', upload.single("blogpic"), postController.updatePost_PUT)
 
 // DELETE request for deleting post
 router.delete('/posts/:id', postController.deletePost_DELETE)
