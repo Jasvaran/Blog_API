@@ -15,7 +15,14 @@ const CommentSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: "User"
+    },
+
+    // Comments have a relationship with each individual post
+    post: {
+        type: Schema.Types.ObjectId,
+        ref: "Post"
     }
+
 })
 
 CommentSchema.virtual('url').get(function () {
