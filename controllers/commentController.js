@@ -36,7 +36,8 @@ const createComment_POST = async(req, res) => {
         const newComment = new CommentModel({
             text: req.body.text,
             timestamp: new Date(Date.now()),
-            user: currentUser._id
+            user: currentUser._id,
+            post: req.body.postId
         })
         await newComment.save()
         res.send(newComment)
