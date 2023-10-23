@@ -4,7 +4,11 @@ import UserModel from "../models/user";
 
 const findAllComments_GET = async(req, res) => {
     try {
-        const comments = await CommentModel.find({}).exec()
+        const comments = await CommentModel.find({})
+            .populate("user")
+            .exec()
+        
+        console.log(comments)
         res.send(comments)
         
     } catch (error) {
