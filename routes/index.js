@@ -83,7 +83,10 @@ router.post('/posts', upload.single("blogpic"), postController.createPost_POST)
 router.get('/posts/:id', postController.findOnePost_GET)
 
 // PUT request for updating post
-router.put('/posts/:id/', upload.single("blogpic"), postController.updatePost_PUT)
+router.put('/posts/:id', upload.single("blogpic"), postController.updatePost_PUT)
+
+// PUT request for publishing
+router.put('/posts/publishing/:id', postController.publishPost_PUT)
 
 // DELETE request for deleting post
 router.delete('/posts/:id', postController.deletePost_DELETE)

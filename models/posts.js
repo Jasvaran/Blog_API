@@ -18,6 +18,10 @@ const PostsSchema = new Schema({
     blogpic: {
         data: Buffer,
         contentType: String,
+    },
+    published: {
+        type: Boolean,
+        default: true
     }
 })
 

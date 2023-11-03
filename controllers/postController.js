@@ -64,11 +64,17 @@ const findOnePost_GET = async(req, res, next) => {
 
 const updatePost_PUT = async(req, res, next) => {
     try {
+        const directoryVar = path.resolve(__dirname, '..')
+
         const currentUser = await UserModel.findById(req.user.id)
         const post = new PostsModel({
             title: req.body.title,
             text: req.body.text,
             user: currentUser._id,
+            blogpic: {
+                data: fs.readFileSync(path.join(directoryVar + '/uploads/' + req.file.filename)),
+                contentType: req.file.mimetype
+            },
             _id: req.params.id
         })
 
@@ -95,6 +101,21 @@ const deletePost_DELETE = async(req, res, next) => {
     }
 }
 
+const publishPost_PUT = async(req, res, next) => {
+    try {
+        const updatePost = await PostsModel.findByIdAndUpdate(req.params.id, [
+            { "$set":{ "published": { "$eq": [false, "$published"] } } }
+        ], {returnDocument: "after"}).exec()
+        res.send(updatePost)
+
+    } catch (error) {
+        res.status(500).send({
+            message: error.message,
+            info: "updating publish failed"
+        })
+    }
+}
+
 
 
 export {
@@ -102,5 +123,6 @@ export {
     createPost_POST,
     findOnePost_GET,
     updatePost_PUT,
-    deletePost_DELETE
+    deletePost_DELETE,
+    publishPost_PUT
 }
