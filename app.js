@@ -79,7 +79,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    origin: ['http://localhost:5173', 'http://localhost:5174', 'https://blog-api-9r0h.onrender.com'],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true
 }))
